@@ -244,7 +244,12 @@ public class HighScore : MonoBehaviour
 		"IND", "K.S", "KIT", "KRT", "NSA",
 		"NME", "LOS", "PLY", "PUP", "REX",
 		"SKY", "SIG", "SND", "VOS", "ZEF",
-		"K.S", // <~< ... >~> ...
+
+		// Update 1
+		"PKA", "RDZ",
+
+		// Balancing, since it's relevant for conditions
+		"K.S",
 	};
 
 	string RandomName()
@@ -308,6 +313,10 @@ public class HighScore : MonoBehaviour
 			buttons[button].AddInteractionPunch(0.25f);
 			bAnims[button].Play("AnimDown", 0, 0);
 			bombAudio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
+
+			// Work around double-press bug in the game
+			if (holdRoutine != null)
+				StopCoroutine(holdRoutine);
 
 			// Arrow buttons can repeat if held for long enough.
 			if (button <= 1)
