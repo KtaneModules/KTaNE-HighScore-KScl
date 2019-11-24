@@ -241,21 +241,24 @@ public class HighScore : MonoBehaviour
 	private string[] __randomNames = new string[] {
 		"ACM", "ASH", "BBH", "BEN", "BOB", 
 		"CAR", "CLR", "COM", "DOG", "FOX",
-		"IND", "K.S", "KIT", "KRT", "NSA",
+		"IND",/*K.S*/ "KIT", "KRT", "NSA",
 		"NME", "LOS", "PLY", "PUP", "REX",
 		"SKY", "SIG", "SND", "VOS", "ZEF",
 
 		// Update 1
 		"PKA", "RDZ",
 
-		// Balancing, since it's relevant for conditions
-		"K.S",
+		// Update 2
+		"SBU", "ULT", 
 	};
 
 	string RandomName()
 	{
-		int i = RNG.Range(0, __randomNames.Length);
-		return __randomNames[i];
+		// Return "K.S" with a fixed probability regardless of number of random names present,
+		// because it's relevant for rule K.
+		if (RNG.Range(0, 100) < 7) // Approx 7% chance
+			return "K.S";
+		return __randomNames[RNG.Range(0, __randomNames.Length)];
 	}
 
 	void ModuleStartup()
