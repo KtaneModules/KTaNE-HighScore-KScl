@@ -68,7 +68,17 @@ public class HighScore : MonoBehaviour
 	{
 		int i = 0, j = 0;
 		string[] ordinals = new string[] {"1ST", "2ND", "3RD", "4TH", "5TH"};
-		for (; i < 5; ++i)
+
+		if (highScores[0].score == 0) // Invalid -- Failed to generate
+		{
+			ordinals = new string[] {"", "", "", "", "0TH"};
+			highScores[0].fullStr = " ^ROM_CHECK_FAIL$";
+			highScores[1].fullStr = " *>#^!%:@^$&!*%<@";
+			highScores[2].fullStr = " ?#:^_ENTER_AAA_$";
+			highScores[3].fullStr = " !&%*^_TO_SOLVE_$";
+			highScores[4].fullStr = String.Format("{0,4}{1,9:N0}{2,4}", ordinals[4], highScores[4].score, new string(highScores[i].name));
+		}
+		else for (; i < 5; ++i)
 		{
 			highScores[i].fullStr = String.Format("{0,4}{1,9:N0}{2,4}", ordinals[i], highScores[i].score, new string(highScores[i].name));
 			highScores[i].dispPos = (i * -2) - 1;
@@ -234,6 +244,22 @@ public class HighScore : MonoBehaviour
 		return true;
 	}
 
+	void FailureToGenerateState()
+	{
+		Debug.LogFormat("[The High Score #{0}] E_ROM_CHECK_FAIL", thisLogID);
+		Debug.LogFormat("[The High Score #{0}] After 64 attempts, a leaderboard couldn't be generated due to an infinite loop or some other unknown issue.", thisLogID);
+		Debug.LogFormat("[The High Score #{0}] The module is going to tell you to input AAA. Do so.", thisLogID);
+		correctName = "AAA".ToCharArray();
+
+		entryNum = 4;
+		for (int i = 0; i < 5; ++i)
+		{
+			highScores[i].name = "###".ToCharArray();
+			highScores[i].score = 0;
+		}
+		highScores[entryNum].name = "A__".ToCharArray();
+	}
+
 	// -------
 	// Startup
 	// -------
@@ -270,20 +296,7 @@ public class HighScore : MonoBehaviour
 				break;
 		}
 		if (attempts > 64)
-		{
-			Debug.LogFormat("[The High Score #{0}] After 64 attempts, I couldn't generate a high score board due to infinite loops or some other logical failure I didn't account for. THIS IS A BUG. REPORT THIS TO K.S., PLEASE.", thisLogID);
-			Debug.LogFormat("[The High Score #{0}] SOLVE: The module is auto-solving.", thisLogID);
-
-			moduleSolved = true;
-			bombModule.HandlePass();
-
-			readyToInsertCoin = true;
-			headerText.text = "";
-			hsTextLines[1].text = "   INSERT  COIN";
-			hsTextLines[4].text = "   CREDIT(S)  0";
-			SetupInsertCoinEasterEgg();
-			return;
-		}
+			FailureToGenerateState();
 
 		Debug.LogFormat("[The High Score #{0}] --------------------", thisLogID);
 		Debug.LogFormat("[The High Score #{0}] The name to enter is {1}.", thisLogID, new string(correctName));

@@ -11,7 +11,7 @@ class AnswerCalculator
 	public List<string> log = new List<string>();
 
 	// What order the characters are in
-	private readonly string __iterationOrder = "AE7VOM8TYG0DK4WC2UHNXP5JS6L13QBRI9FZ?";
+	private readonly string __iterationOrder = "AE7VOM8TYG0DK4CW2UHNXP5JS6L13QBRI9FZ?";
 	private int iterationPosition = 0;
 
 	private HighScoreEntry[] highScores;
@@ -139,11 +139,11 @@ class AnswerCalculator
 			//First character of player's name has been determined
 			case '4': return correctName[0] != '_';
 
-			//Sum of digits in player's score ≤ 15
-			case 'W': return SumOfDigits(highScores[entryNum].score) <= 15;
-
 			//Have not taken a jump at this point
 			case 'C': return !haveJumped;
+
+			//Sum of digits in player's score ≤ 15
+			case 'W': return SumOfDigits(highScores[entryNum].score) <= 15;
 
 			//Player is in 1st, and player's score ≥ 750,000
 			case '2': return entryNum == 0 && highScores[0].score >= 750000;
@@ -340,11 +340,11 @@ class AnswerCalculator
 			//The _third character_ is the same as the first character.
 			case '4': SetCharacter(l, 2, correctName[0]); return;
 
-			//The _next character_ is A, plus the sum of all digits in the 1st player's score.
-			case 'W': SetNextCharacterOffset(l, 'A', SumOfDigits(highScores[0].score)); return;
-
 			//Jump to the fourth character in the serial number.
 			case 'C': DoJump(l, serialNo[3]); return;
+
+			//The _next character_ is A, plus the sum of all digits in the 1st player's score.
+			case 'W': SetNextCharacterOffset(l, 'A', SumOfDigits(highScores[0].score)); return;
 
 			//The _second character_ is the second character of the name that set the 2nd place score. (If it's a period, use D instead.)
 			case '2': SetCharacter(l, 1, highScores[1].name[1] == '.' ? 'D' : highScores[1].name[1]); return;
